@@ -3,6 +3,8 @@
 
 #include <stdexcept>
 #include <string>
+#include <cstring>
+
 
 enum class AllocErrorType {
     InvalidFree,

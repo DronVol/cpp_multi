@@ -2,6 +2,7 @@
 #define ALLOCATOR
 #include <string>
 #include "allocator_pointer.h"
+#include <cstring>
 
 // Forward declaration. Do not include real class definition
 // to avoid expensive macros calculations and increase compile speed
@@ -48,9 +49,10 @@ public:
     std::string dump() const { return ""; }
 
 private:
-    point buff; // описание буфера first = 1 элемент, last = последний.
-    point *root; // указатель на конец буфера = начало списка
-    point *last_node; // указатель на последний элемент списка
+    point *free_points;//указатель на первую свободную ячейку, которая содержала когда-то информацию
+    point buff;//выделенная нам память, first - начало, last - конец
+    point *root;//указатель на конец буфера, начиная с которого у нас задом наперёд идут ячейки с информацией о записанных данных (далее - текущий)
+    point *last_node;//указатель на последний элемент списка
 };
 
 #endif // ALLOCATOR
