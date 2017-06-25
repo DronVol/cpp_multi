@@ -1,9 +1,5 @@
 #include <iostream>
-<<<<<<< HEAD
 #include <queue>
-=======
-#include <queue>        
->>>>>>> 4898c60309c10fffa33ad172c62cb838ff2f8c7d
 #include <string> 
 #include <fstream>
 #include <vector>
@@ -17,7 +13,6 @@ using namespace std;
 
 class Sort{
 	public:
-<<<<<<< HEAD
 	Sort(size_t file_s, size_t file_num_s, size_t mem_s){//передаём длину файла, размер чтения за раз, чилсо
 		file_size = file_s                                              //открываемых на чтение файлов и размер памяти
 		file_num_size = file_num_s
@@ -107,98 +102,6 @@ class Sort{
 	}
 
 	void merge(vector<string> files, int k){
-=======
-		Sort(int buf_size, int sort_num){
-			buf_len = buf_size;
-			sort_number = sort_num;		
-			batch_size = buf_len/(sort_number + 1);
-		}
-		
-		~Sort(){
-			del();
-		};
-		
-		void del(){
-			// по окончании работы почистим мусор
-			system("rm -rf tmp");
-			cout << "tmp folder removed.\n";
-		}
-
-		void init(const char * INPUT_FILE){
-			// Разбиваем наш большой файл на множество отсортированных размером >= buf_len
-			system("mkdir tmp");
-
-			ifstream FileIn(INPUT_FILE, ios:: in | ios::binary);				
-			FileIn.seekg(0, FileIn.end);
-			size_t len = FileIn.tellg(); // длина файла 
-			size_t num = 0; // номер текущего файла вывода
-			size_t position = 0; // смещение в исходном файле
-
-			while(len > position){
-				FileIn.seekg(position);
-
-				// количество байт, которые мы запишем в новый файл
-				size_t l = buf_len;
-				if(buf_len > len - position)
-					l = len - position;
-
-				// считываем батч
-				vector<int> buf(l / sizeof(int));
-				FileIn.read(reinterpret_cast<char*>(buf.data()), buf.size()*sizeof(int)); 
-
-				//сортируем
-				sort(buf.begin(), buf.end());
-
-				//выводим в новый файл				
-				stringstream  adr;
-				adr <<  "tmp/init" << num;
-				ofstream FileOut;
-				FileOut.open(adr.str(), ios::out | ofstream::binary);
-				FileOut.write(reinterpret_cast<const char*>(&buf[0]), buf.size() * sizeof(int));
-				FileOut.close();
-				position += buf_len;
-				num++;
-
-				//добавляем новый файл в очередь
-				FILES.push(adr.str());
-			}
-			FileIn.close();
-		}
-
-		void file_sort(){
-			// сортировка множества файлов
-			int num = 0; // номер нового файла после merge
-			while (FILES.size() > 1){
-
-				cout << "FILES LEFT: "<< FILES.size() << "\n";
-				vector<string> files; // батч файлов для merge
-
-				for (int i=0; (i<sort_number) && (i <= FILES.size()) ; ++i){	
-					files.push_back(FILES.front());
-					FILES.pop();
-				}
-
-				merge(files, num);
-				files.clear();
-				
-				stringstream  adr;
-				adr <<  "tmp/new" << num;
-				FILES.push(adr.str());
-				num++;
-			}
-
-			// по окончании скопируем оставшийся "собранный" файл в качестве result
-			stringstream  cmd;
-			cmd <<  "cp " << FILES.front() << " result";
-			const string tmp = cmd.str();
-			const char* cstr = tmp.c_str();
-			cout << cstr << "\n";
-			system(cstr);
-			
-		}
-
-		void merge(vector<string> files, int k){
->>>>>>> 4898c60309c10fffa33ad172c62cb838ff2f8c7d
 
 			vector<vector<int> > buf(files.size()); // буфер
 			vector<int> len(files.size()); // оставшиеся длины файлов для чтения
@@ -215,11 +118,7 @@ class Sort{
 				len[i] = FileIn.tellg(); 
 				FileIn.seekg(0);
 
-<<<<<<< HEAD
 				position[i] = min(mem_size, int(len[i]/sizeof(int)));
-=======
-				position[i] = min(batch_size, int(len[i]/sizeof(int)));
->>>>>>> 4898c60309c10fffa33ad172c62cb838ff2f8c7d
 				cout << files[i] << " " << len[i] << "\n";
 				len[i] -= position[i] * sizeof(int);
  				buf[i].resize(position[i]);			
@@ -305,10 +204,7 @@ class Sort{
 			sorted.clear();
 
 		}
-<<<<<<< HEAD
 
-=======
->>>>>>> 4898c60309c10fffa33ad172c62cb838ff2f8c7d
 	private:
 		int buf_len; // размер буфера
 		int sort_number; // количество файлов при сортировке
@@ -317,7 +213,6 @@ class Sort{
 };
 
 
-<<<<<<< HEAD
 int main()
 {
 	size_t KB = 1024 ;
@@ -334,17 +229,6 @@ int main()
 
 	Sort s(file_size, file_num_size, mem_size);
 	s.init(INPUT_FILE);
-=======
-
-int main(int argc, char** argv)
-{
-	size_t KB = 1024 ;
-	size_t buf_size = (size_t) atoll(argv[3]) * KB; 
-	size_t sort_files = (size_t) atoll(argv[2]); 
-
-	Sort s(buf_size, sort_files);
-	s.init(argv[1]);
->>>>>>> 4898c60309c10fffa33ad172c62cb838ff2f8c7d
 	s.file_sort();
 
     return 0;
